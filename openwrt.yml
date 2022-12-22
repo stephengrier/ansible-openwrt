@@ -94,6 +94,13 @@
           he_su_beamformer: 1
           he_mu_beamformer: 1
 
+    - name: Set BSS color on the 5GHz radio
+      uci:
+        command: set
+        key: wireless.radio1
+        value:
+          he_bss_color: 36
+
     - name: Commit uci changes
       uci:
         command: commit
