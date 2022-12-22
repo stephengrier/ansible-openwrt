@@ -18,6 +18,12 @@
         insertbefore: '^exit 0$'
         line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
 
+    - name: Enable Wireless Ethernet Dispatch (WED)
+      lineinfile:
+        path: /etc/modules.d/mt7915e
+        regex: '^mt7915e'
+        line: 'mt7915e wed_enable=Y'
+
     - name: Revert pending uci changes
       uci:
         command: revert
