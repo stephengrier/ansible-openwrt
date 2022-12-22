@@ -41,6 +41,7 @@
         value:
           channel: auto
           country: GB
+          htmode: HT20
 
     - name: Configure radio0 interface
       uci:
@@ -60,8 +61,9 @@
         command: set
         key: wireless.radio1
         value:
-          channel: auto
+          channel: 132
           country: GB
+          htmode: HE80
 
     - name: Configure radio1 interface
       uci:
