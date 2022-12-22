@@ -11,24 +11,29 @@
       opkg:
         name: htop
         state: present
+
     - name: Set cpufreq governor to ondemand in rc.local
       lineinfile:
         path: /etc/rc.local
         insertbefore: '^exit 0$'
         line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
+
     - name: Revert pending uci changes
       uci:
         command: revert
+
     - name: Enable software flow offloading
       uci:
         command: set
         key: firewall.@defaults[0].flow_offloading
         value: 1
+
     - name: Enable hardware flow offloading
       uci:
         command: set
         key: firewall.@defaults[0].flow_offloading_hw
         value: 1
+
     - name: Configure radio0 device
       uci:
         command: set
@@ -36,6 +41,7 @@
         value:
           channel: auto
           country: GB
+
     - name: Configure radio0 interface
       uci:
         command: section
@@ -48,6 +54,7 @@
           ssid: OpenWrt
           encryption: psk2
           key: "{{ wpapsk }}"
+
     - name: Configure radio1 device
       uci:
         command: set
@@ -55,6 +62,7 @@
         value:
           channel: auto
           country: GB
+
     - name: Configure radio1 interface
       uci:
         command: section
@@ -67,6 +75,25 @@
           ssid: OpenWrt
           encryption: psk2
           key: "{{ wpapsk }}"
+
+    - name: Make sure 802.11ac (VHT) beamforming is enabled on the 5GHz radio
+      uci:
+        command: set
+        key: wireless.radio1
+        value:
+          su_beamformee: 1
+          su_beamformer: 1
+          mu_beamformer: 1
+
+    - name: Make sure 802.11ax (HE) beamforming is enabled on the 5GHz radio
+      uci:
+        command: set
+        key: wireless.radio1
+        value:
+          he_su_beamformee: 1
+          he_su_beamformer: 1
+          he_mu_beamformer: 1
+
     - name: Commit uci changes
       uci:
         command: commit
