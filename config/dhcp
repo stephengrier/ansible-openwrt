@@ -1,0 +1,64 @@
+
+config dnsmasq
+	option domainneeded '1'
+	option boguspriv '1'
+	option filterwin2k '0'
+	option localise_queries '1'
+	option rebind_protection '1'
+	option rebind_localhost '1'
+	option local '/{{ dhcp.domain }}/'
+	option domain '{{ dhcp.domain }}'
+	option expandhosts '1'
+	option nonegcache '0'
+	option authoritative '1'
+	option readethers '1'
+	option leasefile '/tmp/dhcp.leases'
+	option resolvfile '/tmp/resolv.conf.d/resolv.conf.auto'
+	option nonwildcard '1'
+	option localservice '1'
+	option ednspacket_max '1232'
+
+config odhcpd 'odhcpd'
+	option maindhcp '0'
+	option leasefile '/tmp/hosts/odhcpd'
+	option leasetrigger '/usr/sbin/odhcpd-update'
+	option loglevel '4'
+
+config dhcp 'wan'
+	option interface 'wan'
+	option ignore '1'
+
+{% for interface in dhcp.interfaces %}
+config dhcp '{{ interface.interface }}'
+	option interface '{{ interface.interface }}'
+{% if interface.ignore is defined %}
+	option ignore '{{ interface.ignore }}'
+{% endif %}
+{% if interface.ignore is defined %}
+	option ignore '{{ interface.ignore }}'
+{% endif %}
+{% if interface.start is defined %}
+	option start '{{ interface.start }}'
+{% endif %}
+{% if interface.limit is defined %}
+	option limit '{{ interface.limit }}'
+{% endif %}
+{% if interface.leasetime is defined %}
+	option leasetime '{{ interface.leasetime }}'
+{% endif %}
+{% if interface.dhcpv4 is defined %}
+	option dhcpv4 '{{ interface.dhcpv4 }}'
+{% endif %}
+{% if interface.dhcpv6 is defined %}
+	option dhcpv6 '{{ interface.dhcpv6 }}'
+{% endif %}
+{% if interface.ra is defined %}
+	option ra '{{ interface.ra }}'
+{% endif %}
+{% if interface.ra_flags is defined %}
+{% for ra_flag in interface.ra_flags %}
+	list ra_flags '{{ ra_flag }}'
+{% endfor %}
+{% endif %}
+
+{% endfor %}

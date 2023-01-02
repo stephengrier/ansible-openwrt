@@ -1,0 +1,43 @@
+
+{% for device in wireless.devices %}
+config wifi-device '{{ device.name }}'
+	option type '{{ device.type }}'
+	option path '{{ device.path }}'
+	option band '{{ device.band }}'
+	option htmode '{{ device.htmode }}'
+	option country '{{ device.country }}'
+	option cell_density '{{ device.cell_density }}'
+	option channel '{{ device.channel }}'
+{% if device.he_bss_color is defined %}
+	option he_bss_color '{{ device.he_bss_color }}'
+{% endif %}
+{% if device.su_beamformee is defined %}
+	option su_beamformee '{{ device.su_beamformee }}'
+{% endif %}
+{% if device.su_beamformer is defined %}
+	option su_beamformer '{{ device.su_beamformer }}'
+{% endif %}
+{% if device.mu_beamformer is defined %}
+	option mu_beamformer '{{ device.mu_beamformer }}'
+{% endif %}
+{% if device.he_su_beamformee is defined %}
+	option he_su_beamformee '{{ device.he_su_beamformee }}'
+{% endif %}
+{% if device.he_su_beamformer is defined %}
+	option he_su_beamformer '{{ device.he_su_beamformer }}'
+{% endif %}
+{% if device.he_mu_beamformer is defined %}
+	option he_mu_beamformer '{{ device.he_mu_beamformer }}'
+{% endif %}
+
+{% endfor %}
+{% for interface in wireless.interfaces %}
+config wifi-iface '{{ interface.name }}'
+	option device '{{ interface.device }}'
+	option network '{{ interface.network }}'
+	option mode '{{ interface.mode }}'
+	option ssid '{{ interface.ssid }}'
+	option encryption '{{ interface.encryption }}'
+	option key '{{ interface.key }}'
+
+{% endfor %}

@@ -52,9 +52,15 @@ against a docker container running locally. You can run openwrt in a container
 like so:
 
 ```bash
-docker run --rm -it -p22:22 -d openwrtorg/rootfs
+docker run --rm -it -p22:22 -d --name openwrt openwrtorg/rootfs
 ```
 
-If you choose to do this you will need to change the IP address in the `hosts`
-file to be the address of the container.
+You can then test the playbook against the container by adding a local hosts
+file override in docker like so:
+
+```bash
+OPENWRT_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' openwrt)
+docker run --rm -ti -v $PWD:/ansible --add-host openwrt.lan:$OPENWRT_IP cytopia/ansible /ansible/ansible.sh
+
+```
 

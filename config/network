@@ -1,0 +1,52 @@
+
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix '{{ ula_prefix }}'
+
+{% for device in network.devices %}
+config device
+	option name '{{ device.name }}'
+{% if device.type is defined %}
+	option type '{{ device.type }}'
+{% endif %}
+{% if device.ports is defined %}
+{% for port in device.ports %}
+	list ports '{{ port }}'
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+{% if network.vlans is defined %}
+{% for vlan in network.vlans %}
+config bridge-vlan
+	option device '{{ vlan.device }}'
+	option vlan '{{ vlan.id }}'
+{% for port in vlan.ports %}
+	list ports '{{ port }}'
+{% endfor %}
+
+{% endfor %}
+{% endif %}
+{% for interface in network.interfaces %}
+config interface '{{ interface.name }}'
+	option device '{{ interface.device }}'
+	option proto '{{ interface.proto }}'
+{% if interface.ip6assign is defined %}
+	option ip6assign '{{ interface.ip6assign }}'
+{% endif %}
+{% if interface.ipv6 is defined %}
+	option ipv6 '{{ interface.ipv6 }}'
+{% endif %}
+{% if interface.ipaddr is defined %}
+	option ipaddr '{{ interface.ipaddr }}'
+{% endif %}
+{% if interface.netmask is defined %}
+	option netmask '{{ interface.netmask }}'
+{% endif %}
+
+{% endfor %}

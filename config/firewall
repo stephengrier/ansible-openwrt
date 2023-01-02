@@ -1,0 +1,69 @@
+
+config defaults
+	option input '{{ firewall.defaults.input }}'
+	option output '{{ firewall.defaults.output }}'
+	option forward '{{ firewall.defaults.forward }}'
+	option synflood_protect '{{ firewall.defaults.synflood_protect }}'
+{% if firewall.defaults.flow_offloading is defined %}
+	option flow_offloading '{{ firewall.defaults.flow_offloading }}'
+{% endif %}
+{% if firewall.defaults.flow_offloading_hw is defined %}
+	option flow_offloading_hw '{{ firewall.defaults.flow_offloading_hw }}'
+{% endif %}
+
+{% for zone in firewall.zones %}
+config zone
+	option name '{{ zone.name }}'
+{% for network in zone.networks %}
+	list network '{{ network }}'
+{% endfor %}
+	option input '{{ zone.input }}'
+	option output '{{ zone.output }}'
+	option forward '{{ zone.forward }}'
+{% if zone.masq is defined %}
+	option masq '{{ zone.masq }}'
+{% endif %}
+{% if zone.mtu_fix is defined %}
+	option mtu_fix '{{ zone.mtu_fix }}'
+{% endif %}
+
+{% endfor %}
+{% for forwarding in firewall.forwardings %}
+config forwarding
+	option src '{{ forwarding.src }}'
+	option dest '{{ forwarding.dest }}'
+
+{% endfor %}
+{% for rule in firewall_rules %}
+config rule
+	option name '{{ rule.name }}'
+	option src '{{ rule.src }}'
+{% if rule.dest is defined %}
+	option dest '{{ rule.dest }}'
+{% endif %}
+{% if rule.proto is defined %}
+	option proto '{{ rule.proto }}'
+{% endif %}
+{% if rule.src_ip is defined %}
+	option src_ip '{{ rule.src_ip }}'
+{% endif %}
+{% if rule.dest_port is defined %}
+	option dest_port '{{ rule.dest_port }}'
+{% endif %}
+{% if rule.icmp_type is defined %}
+	option icmp_type '{{ rule.icmp_type }}'
+{% endif %}
+{% if rule.icmp_types is defined %}
+{% for icmp_type in rule.icmp_types %}
+	list icmp_type '{{ icmp_type }}'
+{% endfor %}
+{% endif %}
+{% if rule.limit is defined %}
+	option limit '{{ rule.limit }}'
+{% endif %}
+{% if rule.family is defined %}
+	option family '{{ rule.family }}'
+{% endif %}
+	option target '{{ rule.target }}'
+
+{% endfor %}

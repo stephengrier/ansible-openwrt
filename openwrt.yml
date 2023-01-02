@@ -1,16 +1,25 @@
 - name: Configure an openwrt router
   hosts: openwrt
   gather_facts: no
+
   roles:
     - gekmihesg.openwrt
-  vars_prompt:
-    - name: wpapsk
-      prompt: Enter the WPA2 key to use
+
   tasks:
-    - name: Install htop
+
+    - name: "Check if host is a docker container"
+      stat:
+        path: "/.dockerenv"
+      register: host_is_container
+
+    - name: Install packages
       opkg:
-        name: htop
+        name: '{{ item }}'
         state: present
+        update_cache: yes
+      loop: '{{ packages.install }}'
+      loop_control:
+        label: Installing {{ item }}
 
     - name: Set cpufreq governor to ondemand in rc.local
       lineinfile:
@@ -24,94 +33,73 @@
         regex: '^mt7915e'
         line: 'mt7915e wed_enable=Y'
 
-    - name: Revert pending uci changes
-      uci:
-        command: revert
+    - name: Create /etc/config/network
+      template:
+        src: 'config/network'
+        dest: '/etc/config/network'
+      notify: Reload network
 
-    - name: Enable software flow offloading
-      uci:
-        command: set
-        key: firewall.@defaults[0].flow_offloading
-        value: 1
+    - name: Create /etc/config/wireless
+      template:
+        src: 'config/wireless'
+        dest: '/etc/config/wireless'
+      notify: Reload wifi
 
-    - name: Enable hardware flow offloading
-      uci:
-        command: set
-        key: firewall.@defaults[0].flow_offloading_hw
-        value: 1
+    - name: Create /etc/config/firewall
+      template:
+        src: 'config/firewall'
+        dest: '/etc/config/firewall'
+      notify: Reload firewall
 
-    - name: Configure radio0 device
-      uci:
-        command: set
-        key: wireless.radio0
-        value:
-          channel: auto
-          country: GB
-          htmode: HT20
+    - name: Create /etc/config/dhcp
+      template:
+        src: 'config/dhcp'
+        dest: '/etc/config/dhcp'
+      notify: Restart dhcp
 
-    - name: Configure radio0 interface
-      uci:
-        command: section
-        config: wireless
-        type: wifi-iface
-        find_by:
-          device: radio0
-          mode: ap
-        value:
-          ssid: OpenWrt
-          encryption: psk2
-          key: "{{ wpapsk }}"
+  handlers:
 
-    - name: Configure radio1 device
-      uci:
-        command: set
-        key: wireless.radio1
-        value:
-          channel: 132
-          country: GB
-          htmode: HE80
+    - name: Reload network
+      nohup:
+        command: /etc/init.d/network reload
+        delay: 1
+      when:
+        - "'openwrt' in group_names"
+        - host_is_container != true
 
-    - name: Configure radio1 interface
-      uci:
-        command: section
-        config: wireless
-        type: wifi-iface
-        find_by:
-          device: radio1
-          mode: ap
-        value:
-          ssid: OpenWrt
-          encryption: psk2
-          key: "{{ wpapsk }}"
+    - name: Reload wifi
+      nohup:
+        command: /sbin/wifi reload
+        delay: 1
+      when:
+        - "'openwrt' in group_names"
+        - host_is_container != true
 
-    - name: Make sure 802.11ac (VHT) beamforming is enabled on the 5GHz radio
-      uci:
-        command: set
-        key: wireless.radio1
-        value:
-          su_beamformee: 1
-          su_beamformer: 1
-          mu_beamformer: 1
+    - name: Reload firewall
+      nohup:
+        command: /etc/init.d/firewall reload
+        delay: 1
+      when:
+        - "'openwrt' in group_names"
+        - host_is_container != true
 
-    - name: Make sure 802.11ax (HE) beamforming is enabled on the 5GHz radio
-      uci:
-        command: set
-        key: wireless.radio1
-        value:
-          he_su_beamformee: 1
-          he_su_beamformer: 1
-          he_mu_beamformer: 1
+    - name: Restart dhcp
+      nohup:
+        command: /etc/init.d/dnsmasq restart
+        delay: 1
+      when:
+        - "'openwrt' in group_names"
+        - host_is_container != true
 
-    - name: Set BSS color on the 5GHz radio
-      uci:
-        command: set
-        key: wireless.radio1
-        value:
-          he_bss_color: 36
-
-    - name: Commit uci changes
-      uci:
-        command: commit
-      notify:
-        - restart network
-        - reload wifi
+    - name: Wait for connection
+      wait_for_connection:
+        timeout: "{{ openwrt_wait_for_connection_timeout }}"
+        delay: 5
+      when:
+        - "'openwrt' in group_names"
+        - openwrt_wait_for_connection
+      listen:
+        - Reload network
+        - Reload wifi
+        - Reload firewall
+        - Restart dhcp
