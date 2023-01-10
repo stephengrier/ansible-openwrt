@@ -62,3 +62,11 @@ config dhcp '{{ interface.interface }}'
 {% endif %}
 
 {% endfor %}
+{% if dhcp.hostnames is defined %}
+{% for hostname in dhcp.hostnames %}
+config domain
+	option name '{{ hostname.name }}'
+	option ip '{{ hostname.ip }}'
+
+{% endfor %}
+{% endif %}
