@@ -22,6 +22,14 @@ be installed from Ansible Galaxy like so:
 ansible-galaxy install -r requirements.yml
 ```
 
+Ansible needs the openssh-sftp-server package to be installed on the OpenWrt
+device, otherwise you'll get "failed to open a SFTP connection (EOF during
+negotiation)" errors when running ansible. Install it with opkg:
+
+```bash
+root@OpenWrt:~# opkg install openssh-sftp-server
+```
+
 ## Running the playbook
 
 Once the above prerequisites have been installed the playbook can be run like
