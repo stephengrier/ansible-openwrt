@@ -53,6 +53,17 @@ like so:
 docker run --rm -ti -v $PWD:/ansible cytopia/ansible /ansible/ansible.sh
 ```
 
+## Editing the host\_vars files
+
+The config variables for the playbook live in the files in the host\_vars
+directory. These are encrypted using `ansible-vault`. The `ansible-vault`
+utility is available in the `cytopia/ansible` docker image, so you can edit the
+files like so:
+
+```bash
+docker run --rm -ti -v $PWD:/ansible cytopia/ansible ansible-vault edit /ansible/host_vars/openwrt.lan
+```
+
 ## Testing against an openwrt container
 
 For testing and development purposes it may be easier to run the playbook
