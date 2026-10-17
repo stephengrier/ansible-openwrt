@@ -61,33 +61,25 @@
   handlers:
 
     - name: Reload network
-      nohup:
-        command: /etc/init.d/network reload
-        delay: 1
+      ansible.builtin.raw: '/etc/init.d/network reload'
       when:
         - "'openwrt' in group_names"
         - host_is_container != true
 
     - name: Reload wifi
-      nohup:
-        command: /sbin/wifi reload
-        delay: 1
+      ansible.builtin.raw: '/sbin/wifi reload'
       when:
         - "'openwrt' in group_names"
         - host_is_container != true
 
     - name: Reload firewall
-      nohup:
-        command: /etc/init.d/firewall reload
-        delay: 1
+      ansible.builtin.raw: '/etc/init.d/firewall reload'
       when:
         - "'openwrt' in group_names"
         - host_is_container != true
 
     - name: Restart dhcp
-      nohup:
-        command: /etc/init.d/dnsmasq restart
-        delay: 1
+      ansible.builtin.raw: '/etc/init.d/dnsmasq restart'
       when:
         - "'openwrt' in group_names"
         - host_is_container != true
