@@ -39,11 +39,17 @@ Once the above prerequisites have been installed the playbook can be run like
 so:
 
 ```bash
-ansible-playbook -k openwrt.yml
+ansible-playbook --ask-vault-password openwrt.yml
 ```
 
-The playbook will prompt for the password for SSH access to the router and also
-the WPA2 key to set on the wireless interfaces.
+This will work as long as you have your SSH public key in the authorized\_keys
+file of the root user on the router.
+
+To run the playbook against the test instance, do:
+
+```bash
+ansible-playbook -e "target_env=testing" openwrt.yml
+```
 
 ## Running the playbook in a docker container
 
