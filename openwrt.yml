@@ -28,11 +28,17 @@
         insertbefore: '^exit 0$'
         line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
 
+    - name: Check if mt7915e module file exists
+      ansible.builtin.stat:
+        path: /etc/modules.d/mt7915e
+      register: mt7915e_file
+
     - name: Enable Wireless Ethernet Dispatch (WED)
       lineinfile:
         path: /etc/modules.d/mt7915e
         regex: '^mt7915e'
         line: 'mt7915e wed_enable=Y'
+      when: mt7915e_file.stat.exists
 
     - name: Create /etc/config/network
       template:
