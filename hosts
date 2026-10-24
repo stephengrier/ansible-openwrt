@@ -1,2 +1,5 @@
-[openwrt]
+[production]
 openwrt.lan
+
+[testing]
+openwrt-test.lan

@@ -1,5 +1,5 @@
 - name: Configure an openwrt router
-  hosts: openwrt
+  hosts: "all:&{{ target_env | default('production') }}"
   gather_facts: no
   remote_user: root
 
