@@ -51,6 +51,7 @@
         src: 'config/wireless'
         dest: '/etc/config/wireless'
       notify: Reload wifi
+      when: wireless is defined
 
     - name: Create /etc/config/firewall
       template:
