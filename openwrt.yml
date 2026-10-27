@@ -4,9 +4,12 @@
   remote_user: root
 
   roles:
-    - gekmihesg.openwrt
+    - community.openwrt.init
 
   tasks:
+
+    - name: Gather OpenWrt facts
+      community.openwrt.setup:
 
     - name: "Check if host is a docker container"
       stat:
@@ -14,7 +17,8 @@
       register: host_is_container
 
     - name: Install packages
-      opkg:
+      action: community.openwrt.{{ openwrt_package_manager }}
+      args:
         name: '{{ item }}'
         state: present
         update_cache: yes
