@@ -2,4 +2,4 @@
 openwrt.lan
 
 [testing]
-openwrt-test.lan
+openwrt-test.lan # ansible_host=192.168.3.80
