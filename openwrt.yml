@@ -48,7 +48,7 @@
       template:
         src: 'config/network'
         dest: '/etc/config/network'
-      notify: Reload network
+      notify: Restart network
 
     - name: Create /etc/config/wireless
       template:
@@ -71,39 +71,12 @@
 
   handlers:
 
-    - name: Reload network
-      ansible.builtin.raw: '/etc/init.d/network reload'
-      when:
-        - "'openwrt' in group_names"
-        - host_is_container != true
-
-    - name: Reload wifi
-      ansible.builtin.raw: '/sbin/wifi reload'
-      when:
-        - "'openwrt' in group_names"
-        - host_is_container != true
-
     - name: Reload firewall
-      ansible.builtin.raw: '/etc/init.d/firewall reload'
-      when:
-        - "'openwrt' in group_names"
-        - host_is_container != true
+      community.openwrt.nohup:
+        command: '/etc/init.d/firewall reload'
+        delay: 1
 
     - name: Restart dhcp
-      ansible.builtin.raw: '/etc/init.d/dnsmasq restart'
-      when:
-        - "'openwrt' in group_names"
-        - host_is_container != true
-
-    - name: Wait for connection
-      wait_for_connection:
-        timeout: "{{ openwrt_wait_for_connection_timeout }}"
-        delay: 5
-      when:
-        - "'openwrt' in group_names"
-        - openwrt_wait_for_connection
-      listen:
-        - Reload network
-        - Reload wifi
-        - Reload firewall
-        - Restart dhcp
+      community.openwrt.nohup:
+        command: '/etc/init.d/dnsmasq restart'
+        delay: 1
