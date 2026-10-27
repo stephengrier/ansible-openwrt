@@ -12,7 +12,7 @@
       community.openwrt.setup:
 
     - name: "Check if host is a docker container"
-      stat:
+      community.openwrt.stat:
         path: "/.dockerenv"
       register: host_is_container
 
@@ -27,44 +27,44 @@
         label: Installing {{ item }}
 
     - name: Set cpufreq governor to ondemand in rc.local
-      lineinfile:
+      community.openwrt.lineinfile:
         path: /etc/rc.local
         insertbefore: '^exit 0$'
         line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
 
     - name: Check if mt7915e module file exists
-      ansible.builtin.stat:
+      community.openwrt.stat:
         path: /etc/modules.d/mt7915e
       register: mt7915e_file
 
     - name: Enable Wireless Ethernet Dispatch (WED)
-      lineinfile:
+      community.openwrt.lineinfile:
         path: /etc/modules.d/mt7915e
         regex: '^mt7915e'
         line: 'mt7915e wed_enable=Y'
       when: mt7915e_file.stat.exists
 
     - name: Create /etc/config/network
-      template:
+      community.openwrt.template:
         src: 'config/network'
         dest: '/etc/config/network'
       notify: Restart network
 
     - name: Create /etc/config/wireless
-      template:
+      community.openwrt.template:
         src: 'config/wireless'
         dest: '/etc/config/wireless'
       notify: Reload wifi
       when: wireless is defined
 
     - name: Create /etc/config/firewall
-      template:
+      community.openwrt.template:
         src: 'config/firewall'
         dest: '/etc/config/firewall'
       notify: Reload firewall
 
     - name: Create /etc/config/dhcp
-      template:
+      community.openwrt.template:
         src: 'config/dhcp'
         dest: '/etc/config/dhcp'
       notify: Restart dhcp
