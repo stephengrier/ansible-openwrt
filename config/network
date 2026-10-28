@@ -2,8 +2,7 @@
 config interface 'loopback'
 	option device 'lo'
 	option proto 'static'
-	option ipaddr '127.0.0.1'
-	option netmask '255.0.0.0'
+	list ipaddr '127.0.0.1/8'
 
 config globals 'globals'
 	option ula_prefix '{{ ula_prefix }}'
@@ -43,10 +42,7 @@ config interface '{{ interface.name }}'
 	option ipv6 '{{ interface.ipv6 }}'
 {% endif %}
 {% if interface.ipaddr is defined %}
-	option ipaddr '{{ interface.ipaddr }}'
-{% endif %}
-{% if interface.netmask is defined %}
-	option netmask '{{ interface.netmask }}'
+	list ipaddr '{{ interface.ipaddr }}'
 {% endif %}
 
 {% endfor %}
