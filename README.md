@@ -37,7 +37,7 @@ file of the root user on the router.
 To run the playbook against the test instance, do:
 
 ```bash
-ansible-playbook -e "target_env=test-routers" openwrt.yml
+ansible-playbook -e "target_env=test_routers" openwrt.yml
 ```
 
 ## Running the playbook in a docker container
