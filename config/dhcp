@@ -10,6 +10,7 @@ config dnsmasq
 	option domain '{{ dhcp.domain }}'
 	option expandhosts '1'
 	option nonegcache '0'
+	option cachesize '1000'
 	option authoritative '1'
 	option readethers '1'
 	option leasefile '/tmp/dhcp.leases'
@@ -17,12 +18,15 @@ config dnsmasq
 	option nonwildcard '1'
 	option localservice '1'
 	option ednspacket_max '1232'
+	option filter_aaaa '0'
+	option filter_a '0'
 
 config odhcpd 'odhcpd'
 	option maindhcp '0'
 	option leasefile '/tmp/hosts/odhcpd'
 	option leasetrigger '/usr/sbin/odhcpd-update'
 	option loglevel '4'
+	option hostsdir '/tmp/hosts'
 
 config dhcp 'wan'
 	option interface 'wan'
