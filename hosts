@@ -1,5 +1,12 @@
 [production_routers]
 openwrt.lan
+openwrt2.lan
 
 [test_routers]
 openwrt-test.lan # ansible_host=192.168.3.80
+
+[belkin_rt3200]
+openwrt.lan
+
+[cudy_wr3000p]
+openwrt2.lan

@@ -1,5 +1,5 @@
 
-{% for device in wireless.devices %}
+{% for device in wireless_devices %}
 config wifi-device '{{ device.name }}'
 	option type '{{ device.type }}'
 	option path '{{ device.path }}'
