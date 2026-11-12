@@ -1,3 +1,4 @@
+set_cpu_scaling: 0
 wireless_devices:
   - name: 'radio0'
     type: 'mac80211'

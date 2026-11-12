@@ -31,6 +31,7 @@
         path: /etc/rc.local
         insertbefore: '^exit 0$'
         line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
+      when: set_cpu_scaling | default(false) | bool
 
     - name: Check if mt7915e module file exists
       community.openwrt.stat:
