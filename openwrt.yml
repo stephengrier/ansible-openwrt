@@ -26,6 +26,17 @@
       loop_control:
         label: Installing {{ item }}
 
+    - name: Add public SSH key to Dropbear authorized_keys
+      community.openwrt.lineinfile:
+        path: /etc/dropbear/authorized_keys
+        line: "{{ ssh_public_key }}"
+        state: present
+        create: true
+        owner: root
+        group: root
+        mode: '0600'
+      when: ssh_public_key is defined
+
     - name: Set cpufreq governor to ondemand in rc.local
       community.openwrt.lineinfile:
         path: /etc/rc.local
