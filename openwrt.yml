@@ -37,6 +37,11 @@
         mode: '0600'
       when: ssh_public_key is defined
 
+    - name: Include the solax_to_mqtt role if host is in the production_routers group
+      ansible.builtin.include_role:
+        name: solax_to_mqtt
+      when: "'production_routers' in group_names"
+
     - name: Set cpufreq governor to ondemand in rc.local
       community.openwrt.lineinfile:
         path: /etc/rc.local

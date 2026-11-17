@@ -1,0 +1,12 @@
+---
+inverter:
+  host: '{{ solax_to_mqtt.inverter.host }}'
+  port: {{ solax_to_mqtt.inverter.port | int }}
+  password: '{{ solax_to_mqtt.inverter.password }}'
+mqtt:
+  topic: '{{ solax_to_mqtt.mqtt.topic }}'
+  host: '{{ solax_to_mqtt.mqtt.host }}'
+  port: {{ solax_to_mqtt.mqtt.port | int }}
+  username: '{{ solax_to_mqtt.mqtt.username }}'
+  password: '{{ solax_to_mqtt.mqtt.password }}'
+  cacerts_file: '{{ solax_to_mqtt.mqtt.cacerts_file }}'

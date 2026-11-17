@@ -1,0 +1,33 @@
+
+- name: Install dependencies
+  action: community.openwrt.{{ openwrt_package_manager }}
+  args:
+    name: '{{ item }}'
+    state: present
+    update_cache: yes
+  loop:
+    - micrond
+    - python3
+    - python3-paho-mqtt
+    - python3-pip
+    - python3-yaml
+  loop_control:
+    label: Installing {{ item }}
+
+- name: Install python solax pip
+  community.openwrt.command:
+    cmd: sh -c "pip3 show solax >/dev/null 2>&1 || pip3 install solax"
+  register: pip_result
+  changed_when: "'Successfully installed' in pip_result.stdout"
+
+- name: Create /etc/solax_to_mqtt.yaml
+  community.openwrt.template:
+    src: 'solax_to_mqtt.yaml'
+    dest: '/etc/solax_to_mqtt.yaml'
+    mode: '0600'
+
+- name: Create /usr/bin/solax_to_mqtt.py
+  community.openwrt.copy:
+    src: solax_to_mqtt.py
+    dest: /usr/bin/solax_to_mqtt.py
+    mode: '0755'

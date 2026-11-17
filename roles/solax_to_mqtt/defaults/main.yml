@@ -1,0 +1,12 @@
+solax_to_mqtt:
+  inverter:
+    host:
+    port: 80
+    password:
+  mqtt:
+    topic: 'tele/solax/inverter'
+    host: 'mqtt.example.com'
+    port: 1883
+    username: 'openwrt'
+    password:
+    cacerts_file: '/etc/ssl/cert.pem'
