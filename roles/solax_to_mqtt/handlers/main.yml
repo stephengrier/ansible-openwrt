@@ -1,0 +1,4 @@
+- name: Restart cron
+  community.openwrt.service:
+    name: cron
+    state: restarted

@@ -31,3 +31,12 @@
     src: solax_to_mqtt.py
     dest: /usr/bin/solax_to_mqtt.py
     mode: '0755'
+
+- name: Add crontab entry
+  community.openwrt.lineinfile:
+    path: /etc/crontabs/root
+    regexp: '.*\/usr\/bin\/solax_to_mqtt\.py$'
+    line: '* * * * * /usr/bin/solax_to_mqtt.py'
+    create: true
+    mode: '0600'
+  notify: Restart cron
