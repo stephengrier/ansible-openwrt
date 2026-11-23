@@ -1,0 +1,36 @@
+- name: Gather OpenWrt facts
+  community.openwrt.setup:
+
+- name: Install packages
+  action: community.openwrt.{{ openwrt_package_manager }}
+  args:
+    name: '{{ item }}'
+    state: present
+    update_cache: yes
+  loop: '{{ packages.install }}'
+  loop_control:
+    label: Installing {{ item }}
+
+- name: Add public SSH key to Dropbear authorized_keys
+  community.openwrt.lineinfile:
+    path: /etc/dropbear/authorized_keys
+    line: "{{ ssh_public_key }}"
+    state: present
+    create: true
+    owner: root
+    group: root
+    mode: '0600'
+  when: ssh_public_key is defined
+
+- name: Set cpufreq governor to ondemand in rc.local
+  community.openwrt.lineinfile:
+    path: /etc/rc.local
+    insertbefore: '^exit 0$'
+    line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
+  when: set_cpu_scaling | default(false) | bool
+
+- name: Create /etc/config/network
+  community.openwrt.template:
+    src: 'network'
+    dest: '/etc/config/network'
+  notify: Restart network

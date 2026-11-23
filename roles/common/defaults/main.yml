@@ -1,0 +1,27 @@
+---
+packages:
+  install: []
+  remove: []
+ssh_public_key:
+network:
+  devices:
+    - name: 'br-lan'
+      type: 'bridge'
+      ports:
+        - lan1
+        - lan2
+        - lan3
+        - lan4
+  vlans:
+    - device: 'br-lan'
+      id: 1
+      ports:
+        - 'lan1:u*'
+        - 'lan2:u*'
+        - 'lan3:u*'
+        - 'lan4:u*'
+  interfaces:
+    - name: 'lan'
+      device: 'br-lan.1'
+      proto: 'static'
+      ipaddr: '192.168.1.1/24'

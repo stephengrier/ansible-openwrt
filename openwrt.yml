@@ -5,49 +5,14 @@
 
   roles:
     - community.openwrt.init
+    - common
 
   tasks:
-
-    - name: Gather OpenWrt facts
-      community.openwrt.setup:
-
-    - name: "Check if host is a docker container"
-      community.openwrt.stat:
-        path: "/.dockerenv"
-      register: host_is_container
-
-    - name: Install packages
-      action: community.openwrt.{{ openwrt_package_manager }}
-      args:
-        name: '{{ item }}'
-        state: present
-        update_cache: yes
-      loop: '{{ packages.install }}'
-      loop_control:
-        label: Installing {{ item }}
-
-    - name: Add public SSH key to Dropbear authorized_keys
-      community.openwrt.lineinfile:
-        path: /etc/dropbear/authorized_keys
-        line: "{{ ssh_public_key }}"
-        state: present
-        create: true
-        owner: root
-        group: root
-        mode: '0600'
-      when: ssh_public_key is defined
 
     - name: Include the solax_to_mqtt role if host is in the production_routers group
       ansible.builtin.include_role:
         name: solax_to_mqtt
       when: "'production_routers' in group_names"
-
-    - name: Set cpufreq governor to ondemand in rc.local
-      community.openwrt.lineinfile:
-        path: /etc/rc.local
-        insertbefore: '^exit 0$'
-        line: 'echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor'
-      when: set_cpu_scaling | default(false) | bool
 
     - name: Check if mt7915e module file exists
       community.openwrt.stat:
@@ -60,12 +25,6 @@
         regex: '^mt7915e'
         line: 'mt7915e wed_enable=Y'
       when: mt7915e_file.stat.exists
-
-    - name: Create /etc/config/network
-      community.openwrt.template:
-        src: 'config/network'
-        dest: '/etc/config/network'
-      notify: Restart network
 
     - name: Create /etc/config/wireless
       community.openwrt.template:
