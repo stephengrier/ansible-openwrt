@@ -5,7 +5,9 @@ config interface 'loopback'
 	list ipaddr '127.0.0.1/8'
 
 config globals 'globals'
+{% if ula_prefix is defined %}
 	option ula_prefix '{{ ula_prefix }}'
+{% endif %}
 
 {% for device in network.devices %}
 config device
