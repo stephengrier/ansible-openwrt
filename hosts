@@ -5,6 +5,9 @@ openwrt2.lan
 [test_routers]
 openwrt-test.lan # ansible_host=192.168.3.80
 
+[production_switches]
+switch2.lan ansible_host=192.168.2.4
+
 [belkin_rt3200]
 openwrt.lan
 

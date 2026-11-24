@@ -56,3 +56,12 @@
       community.openwrt.nohup:
         command: '/etc/init.d/dnsmasq restart'
         delay: 1
+
+- name: Configure an openwrt switch
+  hosts: "all:&{{ target_env | default('production_switches') }}"
+  gather_facts: no
+  remote_user: root
+
+  roles:
+    - community.openwrt.init
+    - common
