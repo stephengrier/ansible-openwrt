@@ -1,0 +1,4 @@
+- name: Reload firewall
+  community.openwrt.nohup:
+    command: '/etc/init.d/firewall reload'
+    delay: 1

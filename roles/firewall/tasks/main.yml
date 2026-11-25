@@ -1,0 +1,5 @@
+- name: Create /etc/config/firewall
+  community.openwrt.template:
+    src: 'config/firewall'
+    dest: '/etc/config/firewall'
+  notify: Reload firewall

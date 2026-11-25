@@ -6,6 +6,7 @@
   roles:
     - community.openwrt.init
     - common
+    - firewall
 
   tasks:
 
@@ -33,12 +34,6 @@
       notify: Reload wifi
       when: wireless is defined
 
-    - name: Create /etc/config/firewall
-      community.openwrt.template:
-        src: 'config/firewall'
-        dest: '/etc/config/firewall'
-      notify: Reload firewall
-
     - name: Create /etc/config/dhcp
       community.openwrt.template:
         src: 'config/dhcp'
@@ -46,11 +41,6 @@
       notify: Restart dhcp
 
   handlers:
-
-    - name: Reload firewall
-      community.openwrt.nohup:
-        command: '/etc/init.d/firewall reload'
-        delay: 1
 
     - name: Restart dhcp
       community.openwrt.nohup:
@@ -65,3 +55,4 @@
   roles:
     - community.openwrt.init
     - common
+    - firewall
