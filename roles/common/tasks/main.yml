@@ -1,6 +1,14 @@
 - name: Gather OpenWrt facts
   community.openwrt.setup:
 
+- name: Set system hostname to {{ inventory_hostname_short }}
+  community.openwrt.uci:
+    command: set
+    key: system.@system[0].hostname
+    value: '{{ inventory_hostname_short }}'
+    autocommit: true
+  notify: Reload system service
+
 - name: Install packages
   action: community.openwrt.{{ openwrt_package_manager }}
   args:
