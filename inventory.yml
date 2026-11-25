@@ -1,0 +1,24 @@
+---
+all:
+  children:
+    production_routers:
+      hosts:
+        router1.lan:
+        router2.lan:
+
+    test_routers:
+      hosts:
+        router-test.lan:
+          ansible_host: 192.168.3.80
+
+    production_switches:
+      hosts:
+        switch2.lan:
+
+    belkin_rt3200:
+      hosts:
+        router1.lan:
+
+    cudy_wr3000p:
+      hosts:
+        router2.lan:
