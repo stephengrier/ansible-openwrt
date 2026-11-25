@@ -3,7 +3,6 @@
     - production_routers
     - test_routers
   gather_facts: no
-  remote_user: root
 
   roles:
     - community.openwrt.init
@@ -52,7 +51,6 @@
 - name: Configure an openwrt switch
   hosts: production_switches
   gather_facts: no
-  remote_user: root
 
   roles:
     - community.openwrt.init
