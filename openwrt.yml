@@ -1,5 +1,7 @@
 - name: Configure an openwrt router
-  hosts: "all:&{{ target_env | default('production_routers') }}"
+  hosts:
+    - production_routers
+    - test_routers
   gather_facts: no
   remote_user: root
 
@@ -48,7 +50,7 @@
         delay: 1
 
 - name: Configure an openwrt switch
-  hosts: "all:&{{ target_env | default('production_switches') }}"
+  hosts: production_switches
   gather_facts: no
   remote_user: root
 

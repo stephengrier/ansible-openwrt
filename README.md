@@ -34,16 +34,16 @@ ansible-playbook --ask-vault-password openwrt.yml
 This will work as long as you have your SSH public key in the authorized\_keys
 file of the root user on the router.
 
-To run the playbook against the test\_routers group, do:
-
-```bash
-ansible-playbook -e "target_env=test_routers" openwrt.yml
-```
-
 To run the playbook against a specific instance, do:
 
 ```bash
 ansible-playbook --ask-vault-password -l openwrt2.lan openwrt.yml
+```
+
+or for a specific group:
+
+```bash
+ansible-playbook --ask-vault-password -l test_routers openwrt.yml
 ```
 
 ## Editing the host\_vars files
