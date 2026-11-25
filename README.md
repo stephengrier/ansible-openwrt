@@ -34,32 +34,27 @@ ansible-playbook --ask-vault-password openwrt.yml
 This will work as long as you have your SSH public key in the authorized\_keys
 file of the root user on the router.
 
-To run the playbook against the test instance, do:
+To run the playbook against the test\_routers group, do:
 
 ```bash
 ansible-playbook -e "target_env=test_routers" openwrt.yml
 ```
 
-## Running the playbook in a docker container
-
-You can avoid having to install ansible on your device by running the playbook
-in a docker container. The `ansible.sh` script contains all the commands to
-install dependencies and run ansible and can be run inside a docker container
-like so:
+To run the playbook against a specific instance, do:
 
 ```bash
-docker run --rm -ti -v $PWD:/ansible cytopia/ansible /ansible/ansible.sh
+ansible-playbook --ask-vault-password -l openwrt2.lan openwrt.yml
 ```
 
 ## Editing the host\_vars files
 
-The config variables for the playbook live in the files in the host\_vars
-directory. These are encrypted using `ansible-vault`. The `ansible-vault`
-utility is available in the `cytopia/ansible` docker image, so you can edit the
-files like so:
+The config variables for the playbook live in the files in the group\_vars
+directory. These are encrypted using `ansible-vault`.
+
+Edit the encrypted vars file like so:
 
 ```bash
-docker run --rm -ti -v $PWD:/ansible cytopia/ansible ansible-vault edit /ansible/host_vars/openwrt.lan
+ansible-vault edit group_vars/production_switches.yml
 ```
 
 ## Testing against an openwrt container
