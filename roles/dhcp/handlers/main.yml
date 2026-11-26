@@ -1,0 +1,4 @@
+- name: Restart dhcp
+  community.openwrt.nohup:
+    command: '/etc/init.d/dnsmasq restart'
+    delay: 1

@@ -9,6 +9,7 @@
     - common
     - firewall
     - wireless
+    - dhcp
 
   tasks:
 
@@ -16,19 +17,6 @@
       ansible.builtin.include_role:
         name: solax_to_mqtt
       when: "'production_routers' in group_names"
-
-    - name: Create /etc/config/dhcp
-      community.openwrt.template:
-        src: 'config/dhcp'
-        dest: '/etc/config/dhcp'
-      notify: Restart dhcp
-
-  handlers:
-
-    - name: Restart dhcp
-      community.openwrt.nohup:
-        command: '/etc/init.d/dnsmasq restart'
-        delay: 1
 
 - name: Configure an openwrt switch
   hosts: production_switches
