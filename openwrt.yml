@@ -1,7 +1,6 @@
-- name: Configure an openwrt router
+- name: Configure a production openwrt router
   hosts:
     - production_routers
-    - test_routers
   gather_facts: no
 
   roles:
@@ -10,13 +9,18 @@
     - firewall
     - wireless
     - dhcp
+    - solax_to_mqtt
 
-  tasks:
+- name: Configure a test openwrt router
+  hosts:
+    - test_routers
+  gather_facts: no
 
-    - name: Include the solax_to_mqtt role if host is in the production_routers group
-      ansible.builtin.include_role:
-        name: solax_to_mqtt
-      when: "'production_routers' in group_names"
+  roles:
+    - community.openwrt.init
+    - common
+    - firewall
+    - dhcp
 
 - name: Configure an openwrt switch
   hosts: production_switches
