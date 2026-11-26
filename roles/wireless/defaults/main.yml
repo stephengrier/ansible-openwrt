@@ -1,0 +1,34 @@
+---
+wireless_devices:
+  - name: 'radio0'
+    type: 'mac80211'
+    path: 'platform/soc/18000000.wifi'
+    band: '2g'
+    htmode: 'HE20'
+    country: 'GB'
+    cell_density: '0'
+    channel: 'auto'
+  - name: 'radio1'
+    type: 'mac80211'
+    path: 'platform/soc/18000000.wifi+1'
+    band: '5g'
+    htmode: 'HE80'
+    country: 'GB'
+    cell_density: '0'
+    channel: 'auto'
+wireless:
+  interfaces:
+    - name: 'default_radio0'
+      device: 'radio0'
+      network: 'lan'
+      mode: 'ap'
+      ssid: 'OpenWrt'
+      encryption: 'none'
+      key:
+    - name: 'default_radio1'
+      device: 'radio1'
+      network: 'lan'
+      mode: 'ap'
+      ssid: 'OpenWrt'
+      encryption: 'none'
+      key:

@@ -8,6 +8,7 @@
     - community.openwrt.init
     - common
     - firewall
+    - wireless
 
   tasks:
 
@@ -15,25 +16,6 @@
       ansible.builtin.include_role:
         name: solax_to_mqtt
       when: "'production_routers' in group_names"
-
-    - name: Check if mt7915e module file exists
-      community.openwrt.stat:
-        path: /etc/modules.d/mt7915e
-      register: mt7915e_file
-
-    - name: Enable Wireless Ethernet Dispatch (WED)
-      community.openwrt.lineinfile:
-        path: /etc/modules.d/mt7915e
-        regex: '^mt7915e'
-        line: 'mt7915e wed_enable=Y'
-      when: mt7915e_file.stat.exists
-
-    - name: Create /etc/config/wireless
-      community.openwrt.template:
-        src: 'config/wireless'
-        dest: '/etc/config/wireless'
-      notify: Reload wifi
-      when: wireless is defined
 
     - name: Create /etc/config/dhcp
       community.openwrt.template:
