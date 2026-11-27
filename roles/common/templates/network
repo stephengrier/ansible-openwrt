@@ -20,6 +20,9 @@ config device
 	list ports '{{ port }}'
 {% endfor %}
 {% endif %}
+{% if device.disabled is defined %}
+	option disabled '{{ device.disabled }}'
+{% endif %}
 
 {% endfor %}
 {% if network.vlans is defined %}
